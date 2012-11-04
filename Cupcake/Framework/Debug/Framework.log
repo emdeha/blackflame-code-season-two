@@ -1,0 +1,17 @@
+﻿Build started 3.11.2012 г. 19:07:43 ч..
+     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Framework\Framework.vcxproj" on node 3 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Framework.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       Lib:
+         All outputs are up-to-date.
+         Framework.vcxproj -> E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Framework.lib
+       FinalizeBuildStatus:
+         Deleting file "Debug\Framework.unsuccessfulbuild".
+         Touching "Debug\Framework.lastbuildstate".
+     1>Done Building Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Framework\Framework.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.02

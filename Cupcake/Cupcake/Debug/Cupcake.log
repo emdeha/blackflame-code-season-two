@@ -1,0 +1,20 @@
+﻿Build started 3.11.2012 г. 19:19:07 ч..
+     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Cupcake\Cupcake.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\Cupcake.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+       ManifestResourceCompile:
+         All outputs are up-to-date.
+       Link:
+         All outputs are up-to-date.
+       Manifest:
+         All outputs are up-to-date.
+       FinalizeBuildStatus:
+         Deleting file "Debug\Cupcake.unsuccessfulbuild".
+         Touching "Debug\Cupcake.lastbuildstate".
+     1>Done Building Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Cupcake\Cupcake.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.03
