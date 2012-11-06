@@ -2,15 +2,118 @@
 #include "../Platform/Platform.h"
 #include "../Player/Player.h"
 
+#include "../Mouse/Mouse.h"
 
-Platform platforms[3];
+
+Platform platforms[10];
 Player player;
+
+Mouse userMouse;
 
 
 GLuint theProgram;
 GLuint offsetUniform;
 GLuint isPlayerUniform;
 
+
+float jumpUnits = 0.0005f;
+
+const float PLATFORMS_WIDTH = 0.4f;
+const float PLATFORMS_HEIGHT = 0.15f;
+const int PLATFORMS_COUNT = 10;
+
+
+bool IsCollided(int indexOfPlatformToCollide, Platform allPlatforms[], int platformCount)
+{
+	glm::vec2 platformMinCorner = platforms[indexOfPlatformToCollide].GetMinCorner();
+	glm::vec2 platformMaxCorner = platforms[indexOfPlatformToCollide].GetMaxCorner();
+
+	for(int currPlatform = 0; currPlatform < platformCount; currPlatform++)
+	{		
+		if(currPlatform == indexOfPlatformToCollide)
+		{
+			break;
+		}
+
+		glm::vec2 currentPlatformMinCorner = platforms[platformCount].GetMinCorner();
+		glm::vec2 currentPlatformMaxCorner = platforms[platformCount].GetMaxCorner();
+
+		if(platformMinCorner.x >= currentPlatformMinCorner.x &&
+		   platformMinCorner.y >= currentPlatformMinCorner.y &&
+		   platformMinCorner.x <= currentPlatformMaxCorner.x &&
+		   platformMinCorner.y <= currentPlatformMaxCorner.y ||
+		   platformMaxCorner.x >= currentPlatformMinCorner.x &&
+		   platformMaxCorner.y >= currentPlatformMinCorner.y &&
+		   platformMaxCorner.x <= currentPlatformMaxCorner.x &&
+		   platformMaxCorner.y <= currentPlatformMaxCorner.y)
+		{
+			return true;
+		}		
+	}
+
+	return false;
+}
+
+void RandomizePlatforms(Platform platformArray[], int platformCount)
+{
+	for(int currPlatform = 0; currPlatform < platformCount; currPlatform++)
+	{
+		glm::vec2 newPlatformPosition;
+		newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) - 1;
+		newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
+		
+		platformArray[currPlatform] =
+			Platform(newPlatformPosition,
+					 PLATFORMS_WIDTH, PLATFORMS_HEIGHT);
+
+		while(IsCollided(currPlatform, platformArray, platformCount))
+		{
+			newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) - 1;
+			newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
+
+			platformArray[currPlatform] =
+				Platform(newPlatformPosition,
+						 PLATFORMS_WIDTH, PLATFORMS_HEIGHT);
+		}
+	}
+}
+
+
+void HandleMouse()
+{
+	if(userMouse.IsLeftButtonDown())
+	{
+		player.Jump(jumpUnits);
+	}
+}
+void HandleMouseButtons(int button, int state, int x, int y)
+{
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		userMouse.PressLeftButton();
+	}
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+	{
+		userMouse.ReleaseLeftButton();
+	}
+
+	if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+	{
+		userMouse.PressRightButton();
+	}
+	if(button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
+	{
+		userMouse.ReleaseRightButton();
+	}
+}
+void HandleActiveMovement(int x, int y)
+{
+	userMouse.SetCurrentPosition(glm::ivec2(x, y));
+}
+void HandlePassiveMovement(int x, int y)
+{
+	userMouse.SetCurrentPosition(glm::ivec2(x, y));
+}
 
 
 void InitializeShaders(const std::string &vertexShader, 
@@ -51,26 +154,40 @@ void InitializeVertexBuffer()
 }
 
 
+	
+glm::vec2 platformsMinCorners[PLATFORMS_COUNT];
+glm::vec2 platformsMaxCorners[PLATFORMS_COUNT];
+
+void InitObjects()
+{
+	RandomizePlatforms(platforms, PLATFORMS_COUNT);
+
+	for(int currPlatform = 0; currPlatform < PLATFORMS_COUNT; currPlatform++)
+	{
+		platforms[currPlatform].Init();
+		platformsMinCorners[currPlatform] = platforms[currPlatform].GetMinCorner();
+		platformsMaxCorners[currPlatform] = platforms[currPlatform].GetMaxCorner();
+	}
+
+	player = Player(glm::vec2(0.0f, 0.2f), glm::vec2(0.01f, 0.0f),
+					0.1f, 0.15f);
+
+	player.Init();
+}
+
 void Init()
 {
 	InitializeShaders("VertexShader.vert", "FragmentShader.frag");
 
-	platforms[0] = Platform(glm::vec2(0.0f, 0.0f), 
-							0.4f, 0.15f);
-	platforms[1] = Platform(glm::vec2(-0.7f, -0.5f),	
-							0.4f, 0.15f);
-	platforms[2] = Platform(glm::vec2(0.5f, 0.5f),
-							0.4f, 0.15f);
-	platforms[0].Init();
-	platforms[1].Init();
-	platforms[2].Init();
-
-
-	player = Player(glm::vec2(0.0f, 0.2f), glm::vec2(0.1f, 0.0001f),
-					0.1f, 0.15f);
-
-	player.Init();
+	InitObjects();
+	
 	InitializeVertexBuffer();
+
+
+	glutMouseFunc(HandleMouseButtons);
+	glutMotionFunc(HandleActiveMovement);
+	glutPassiveMotionFunc(HandlePassiveMovement);
+
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -83,35 +200,21 @@ void Display()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-	
-
-	platforms[0].Render(theProgram);
-	platforms[1].Render(theProgram);
-	platforms[2].Render(theProgram);
 
 
-
-	glm::vec2 minCorners[] = 
+	for(int currPlatform = 0; currPlatform < PLATFORMS_COUNT; currPlatform++)
 	{
-		platforms[0].GetMinCorner(),
-		platforms[1].GetMinCorner(),
-		platforms[2].GetMinCorner(),
-	};
-	glm::vec2 maxCorners[] =
-	{
-		platforms[0].GetMaxCorner(),
-		platforms[1].GetMaxCorner(),
-		platforms[2].GetMaxCorner(),
-	};
+		platforms[currPlatform].Render(theProgram);
+	}
 
-
-	player.Update(minCorners, maxCorners, 3);
+	player.Update(platformsMinCorners, platformsMaxCorners, PLATFORMS_COUNT);
 
 	player.Render(theProgram);
 
-	/*glUseProgram(theProgram);
+	/*
+	glUseProgram(theProgram);
 
-	glUniform2f(offsetUniform, _x, _y);
+	//glUniform2f(offsetUniform, _x, _y);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 	glEnableVertexAttribArray(0);
@@ -119,7 +222,10 @@ void Display()
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	glUseProgram(0);*/
+	glUseProgram(0);
+	*/
+
+	HandleMouse();
 
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -128,6 +234,8 @@ void Reshape(int width, int height)
 {
 	//glViewport(0, 0, width, height);
 }
+
+
 void Keyboard(unsigned char key, int x, int y)
 {
 	switch(key)
@@ -137,16 +245,15 @@ void Keyboard(unsigned char key, int x, int y)
 		return;
 
 	case 'a':
-		//_x += 0.1f;
-		player.MoveLeft(0.05f);
+		player.MoveLeft();
 		break;
+
 	case 'd':
-		//_x -= 0.1f;
-		player.MoveRight(0.05f);
+		player.MoveRight();
 		break;
 
 	case 32:
-		player.Jump(1000);
+		player.Jump(jumpUnits);
 		break;
 	}
 }

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cupcake", "Cupcake\Cupcake.vcxproj", "{76AB14AD-E583-4C9B-985B-A6FB336189DA}"
 	ProjectSection(ProjectDependencies) = postProject
+		{0DF90E27-088E-4FEA-ACEC-9F9BAA75ABDB} = {0DF90E27-088E-4FEA-ACEC-9F9BAA75ABDB}
 		{A84ECC2C-57C1-4E63-9970-4BD53468A572} = {A84ECC2C-57C1-4E63-9970-4BD53468A572}
+		{4CBDAB7B-23BD-40D9-923B-9D409AA2DA9A} = {4CBDAB7B-23BD-40D9-923B-9D409AA2DA9A}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framework", "Framework\Framework.vcxproj", "{0DF90E27-088E-4FEA-ACEC-9F9BAA75ABDB}"
@@ -11,6 +13,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Platform", "Platform\Platform.vcxproj", "{A84ECC2C-57C1-4E63-9970-4BD53468A572}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Player", "Player\Player.vcxproj", "{4CBDAB7B-23BD-40D9-923B-9D409AA2DA9A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mouse", "Mouse\Mouse.vcxproj", "{854D03A0-F808-4790-AAB3-A1842B8DFEED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +38,10 @@ Global
 		{4CBDAB7B-23BD-40D9-923B-9D409AA2DA9A}.Debug|Win32.Build.0 = Debug|Win32
 		{4CBDAB7B-23BD-40D9-923B-9D409AA2DA9A}.Release|Win32.ActiveCfg = Release|Win32
 		{4CBDAB7B-23BD-40D9-923B-9D409AA2DA9A}.Release|Win32.Build.0 = Release|Win32
+		{854D03A0-F808-4790-AAB3-A1842B8DFEED}.Debug|Win32.ActiveCfg = Debug|Win32
+		{854D03A0-F808-4790-AAB3-A1842B8DFEED}.Debug|Win32.Build.0 = Debug|Win32
+		{854D03A0-F808-4790-AAB3-A1842B8DFEED}.Release|Win32.ActiveCfg = Release|Win32
+		{854D03A0-F808-4790-AAB3-A1842B8DFEED}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

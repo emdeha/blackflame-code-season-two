@@ -81,6 +81,20 @@
   <ItemGroup>
     <ClInclude Include="Main.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Framework\Framework.vcxproj">
+      <Project>{0df90e27-088e-4fea-acec-9f9baa75abdb}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Mouse\Mouse.vcxproj">
+      <Project>{854d03a0-f808-4790-aab3-a1842b8dfeed}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Platform\Platform.vcxproj">
+      <Project>{a84ecc2c-57c1-4e63-9970-4bd53468a572}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Player\Player.vcxproj">
+      <Project>{4cbdab7b-23bd-40d9-923b-9d409aa2da9a}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -15,6 +15,9 @@
 #include <vector>
 
 
+static float gravity = 0.0000005f;
+
+
 class Player
 {
 private:
@@ -39,15 +42,12 @@ private:
 	bool isJumping;
 
 
-	void UpdatePhysics(glm::vec2 minCorners[], glm::vec2 maxCorners[], 
-					   int numCorners)
+	void IsCollided(glm::vec2 minCorners[], glm::vec2 maxCorners[], 
+					int numCorners)
 	{
-		oldPosition = currentPosition;
-
-		currentPosition.y -= velocity.y;
-
 		glm::vec2 playerMinCorner = currentPosition;
 		glm::vec2 playerMaxCorner = currentPosition + glm::vec2(width, height);
+
 
 		for(int corner = 0; corner < numCorners; corner++)
 		{
@@ -56,17 +56,31 @@ private:
 			   playerMinCorner.x <= maxCorners[corner].x &&
 			   playerMinCorner.y <= maxCorners[corner].y)
 			{
-				currentPosition.y = maxCorners[corner].y;
-			}
+				currentPosition.y -= velocity.y;
+				velocity.y = 0.0f;
+				return;
+			}			
 
 			if(playerMaxCorner.x >= minCorners[corner].x &&
 			   playerMaxCorner.y >= minCorners[corner].y &&
 			   playerMaxCorner.x <= maxCorners[corner].x &&
 			   playerMaxCorner.y <= maxCorners[corner].y)
 			{
-				currentPosition.y = minCorners[corner].y;
+				currentPosition.y += velocity.y;
+				velocity.y = 0.0f;
+				return;
 			}
 		}
+	}
+
+	void UpdatePhysics(glm::vec2 minCorners[], glm::vec2 maxCorners[], 
+					   int numCorners)
+	{
+		oldPosition = currentPosition;
+
+		//currentPosition.y -= velocity.y;
+
+		IsCollided(minCorners, maxCorners, numCorners);
 	}
 	void UpdatePositions()
 	{
@@ -176,6 +190,9 @@ public:
 	void Update(glm::vec2 minCorners[], glm::vec2 maxCorners[], 
 				int numCorners)
 	{
+		velocity.y -= gravity;
+		currentPosition.y += velocity.y;
+		
 		UpdatePhysics(minCorners, maxCorners, numCorners);
 		UpdatePositions();
 	}
@@ -196,18 +213,18 @@ public:
 		glUseProgram(0);
 	}
 
-	void MoveLeft(float units)
+	void MoveLeft()
 	{
 		oldPosition = currentPosition;
 
-		currentPosition.x -= units * velocity.x;
+		currentPosition.x -= velocity.x;
 		//offset.x -= units;
 	}
-	void MoveRight(float units)
+	void MoveRight()
 	{
 		oldPosition = currentPosition;
 
-		currentPosition.x += units * velocity.x;
+		currentPosition.x += velocity.x;
 		//offset.x += units;
 	}
 
@@ -217,10 +234,12 @@ public:
 		{
 			oldPosition = currentPosition;
 
-			currentPosition.y += units * velocity.y;
+			velocity.y += units;
+
+			isJumping = true;
 		}
 
-		if(currentPosition - oldPosition == glm::vec2())
+		if(velocity.y == 0.0f)
 		{
 			isJumping = false;
 		}
