@@ -1,4 +1,4 @@
-﻿Build started 6.11.2012 г. 21:46:03 ч..
+﻿Build started 11.11.2012 г. 18:44:31 ч..
      1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Cupcake\Cupcake.vcxproj" on node 3 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Cupcake.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -10,6 +10,7 @@
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Cupcake.exe" /INCREMENTAL /NOLOGO glloadD.lib glimgD.lib glutilD.lib glmeshD.lib freeglutD.lib glu32.lib opengl32.lib gdi32.lib winmm.lib user32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\Cupcake.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Cupcake.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Cupcake.lib" /MACHINE:X86 Debug\Cupcake.exe.embed.manifest.res
          Debug\Main.obj
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Cake.lib"
          "E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Framework.lib"
          "E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Mouse.lib"
          "E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Platform.lib"
@@ -27,4 +28,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.19
+Time Elapsed 00:00:02.54

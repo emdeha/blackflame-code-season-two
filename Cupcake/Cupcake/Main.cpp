@@ -1,12 +1,15 @@
+#include <ctime>
+
 #include "Main.h"
 #include "../Platform/Platform.h"
 #include "../Player/Player.h"
+#include "../Cake/Cake.h"
 
 #include "../Mouse/Mouse.h"
 
 
-Platform platforms[10];
-Player player;
+// TODO: When the player jumps upwards, he can stick to the platform's bottom and move.
+
 
 Mouse userMouse;
 
@@ -16,46 +19,132 @@ GLuint offsetUniform;
 GLuint isPlayerUniform;
 
 
-float jumpUnits = 0.0005f;
+const float JUMP_UNITS = 0.0005f;
 
 const float PLATFORMS_WIDTH = 0.4f;
 const float PLATFORMS_HEIGHT = 0.15f;
 const int PLATFORMS_COUNT = 10;
+const float PLATFORMS_LEFT_VELOCITY = 0.0001f;
 
+Platform platforms[PLATFORMS_COUNT];
+Player player;
 
-bool IsCollided(int indexOfPlatformToCollide, Platform allPlatforms[], int platformCount)
+const int GRID_WIDTH = (int)(2.0f / 0.4f);
+const int GRID_HEIGHT = (int)(2.0f / 0.15f);
+
+struct GridCell
 {
-	glm::vec2 platformMinCorner = platforms[indexOfPlatformToCollide].GetMinCorner();
-	glm::vec2 platformMaxCorner = platforms[indexOfPlatformToCollide].GetMaxCorner();
+	bool isTaken;
+	glm::vec2 position;
+};
 
-	for(int currPlatform = 0; currPlatform < platformCount; currPlatform++)
-	{		
-		if(currPlatform == indexOfPlatformToCollide)
+GridCell platformsGrid[GRID_WIDTH][GRID_HEIGHT];
+
+void FillPlatformsGrid()
+{
+	for(int col = 0; col < GRID_WIDTH; col++)
+	{
+		for(int row = 0; row < GRID_HEIGHT; row++)
 		{
-			break;
+			platformsGrid[col][row].isTaken = false;
 		}
-
-		glm::vec2 currentPlatformMinCorner = platforms[platformCount].GetMinCorner();
-		glm::vec2 currentPlatformMaxCorner = platforms[platformCount].GetMaxCorner();
-
-		if(platformMinCorner.x >= currentPlatformMinCorner.x &&
-		   platformMinCorner.y >= currentPlatformMinCorner.y &&
-		   platformMinCorner.x <= currentPlatformMaxCorner.x &&
-		   platformMinCorner.y <= currentPlatformMaxCorner.y ||
-		   platformMaxCorner.x >= currentPlatformMinCorner.x &&
-		   platformMaxCorner.y >= currentPlatformMinCorner.y &&
-		   platformMaxCorner.x <= currentPlatformMaxCorner.x &&
-		   platformMaxCorner.y <= currentPlatformMaxCorner.y)
-		{
-			return true;
-		}		
 	}
-
-	return false;
+	
+	float posX = -1.0f;
+	float posY = -1.0f;
+	for(int col = 0; col < GRID_WIDTH; col++)
+	{
+		for(int row = 0; row < GRID_HEIGHT; row++)
+		{
+			platformsGrid[col][row].position = glm::vec2(posX, posY);
+			posY += PLATFORMS_HEIGHT;
+		}
+		posY = -1.0f;
+		posX += PLATFORMS_WIDTH;
+	}
 }
+
+bool IsCollided(Platform firstPlatform, Platform secondPlatform)
+{
+	glm::vec2 firstPlatformCenterPoint = 
+		glm::vec2(firstPlatform.GetMinCorner().x + firstPlatform.GetWidth() / 2.0f, 
+				  firstPlatform.GetMinCorner().y + firstPlatform.GetHeight() / 2.0f);
+	glm::vec2 secondPlatformCenterPoint = 
+		glm::vec2(secondPlatform.GetMinCorner().x + secondPlatform.GetWidth() / 2.0f,
+				  secondPlatform.GetMinCorner().y + secondPlatform.GetHeight() / 2.0f);
+
+
+	glm::vec2 firstPlatformHalfWidths = glm::vec2(firstPlatform.GetWidth() / 2.0f, firstPlatform.GetHeight() / 2.0f);
+	glm::vec2 secondPlatformHalfWidths = glm::vec2(secondPlatform.GetWidth() / 2.0f, secondPlatform.GetHeight() / 2.0f);
+
+
+	if(fabsf(firstPlatformCenterPoint.x - secondPlatformCenterPoint.x) >=
+	   (firstPlatformHalfWidths.x + secondPlatformHalfWidths.x))
+		return false;
+	if(fabsf(firstPlatformCenterPoint.y - secondPlatformCenterPoint.y) >=
+	   (firstPlatformHalfWidths.y + secondPlatformHalfWidths.y))
+		return false;
+
+	return true;
+}
+bool IsCollided(Cake cake, Player player)
+{
+	glm::vec2 cakeCenterPoint = 
+		glm::vec2(cake.GetMinCorner().x + cake.GetWidth() / 2.0f, 
+				  cake.GetMinCorner().y + cake.GetHeight() / 2.0f);
+	glm::vec2 playerCenterPoint = 
+		glm::vec2(player.GetMinCorner().x + player.GetWidth() / 2.0f,
+				  player.GetMinCorner().y + player.GetHeight() / 2.0f);
+
+
+	glm::vec2 cakeHalfWidths = glm::vec2(cake.GetWidth() / 2.0f, cake.GetHeight() / 2.0f);
+	glm::vec2 playerHalfWidths = glm::vec2(player.GetWidth() / 2.0f, player.GetHeight() / 2.0f);
+
+
+	if(fabsf(cakeCenterPoint.x - playerCenterPoint.x) >
+		(cakeHalfWidths.x + playerHalfWidths.x))
+		return false;
+	if(fabsf(cakeCenterPoint.y - playerCenterPoint.y) >
+		(cakeHalfWidths.y + playerHalfWidths.y))
+		return false;
+
+
+	return true;
+}
+
 
 void RandomizePlatforms(Platform platformArray[], int platformCount)
 {
+	srand((unsigned) time(0));
+
+	const int NUM_PLATFORMS = platformCount;
+
+	FillPlatformsGrid();
+
+	for(int i = 0; i < platformCount; i++)
+	{
+		glm::vec2 platformPos;
+
+		int gridCol = rand() % (GRID_WIDTH);
+		int	gridRow = rand() % (GRID_HEIGHT);
+		platformPos = platformsGrid[gridCol][gridRow].position;
+
+		while(platformsGrid[gridCol][gridRow].isTaken)
+		{
+			gridCol = rand() % (GRID_WIDTH);
+			gridRow = rand() % (GRID_HEIGHT);
+			platformPos = platformsGrid[gridCol][gridRow].position;
+		}
+		
+
+		platformsGrid[gridCol][gridRow].isTaken = true;
+
+		platformArray[i] = Platform(platformPos,
+									PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
+									PLATFORMS_LEFT_VELOCITY);
+	}
+
+	/*
 	for(int currPlatform = 0; currPlatform < platformCount; currPlatform++)
 	{
 		glm::vec2 newPlatformPosition;
@@ -64,18 +153,27 @@ void RandomizePlatforms(Platform platformArray[], int platformCount)
 		
 		platformArray[currPlatform] =
 			Platform(newPlatformPosition,
-					 PLATFORMS_WIDTH, PLATFORMS_HEIGHT);
+					 PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
+					 PLATFORMS_LEFT_VELOCITY);
 
-		while(IsCollided(currPlatform, platformArray, platformCount))
+		for(int i = 0; i < platformCount; i++)
 		{
-			newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) - 1;
-			newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
+			if(i != currPlatform)
+			{
+				while(IsCollided(platforms[currPlatform], platforms[i]))
+				{
+					newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) - 1;
+					newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
 
-			platformArray[currPlatform] =
-				Platform(newPlatformPosition,
-						 PLATFORMS_WIDTH, PLATFORMS_HEIGHT);
+					platformArray[currPlatform] =
+						Platform(newPlatformPosition,
+								 PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
+								 PLATFORMS_LEFT_VELOCITY);
+				}
+			}
 		}
 	}
+	*/
 }
 
 
@@ -83,7 +181,7 @@ void HandleMouse()
 {
 	if(userMouse.IsLeftButtonDown())
 	{
-		player.Jump(jumpUnits);
+		player.Jump(JUMP_UNITS);
 	}
 }
 void HandleMouseButtons(int button, int state, int x, int y)
@@ -158,6 +256,8 @@ void InitializeVertexBuffer()
 glm::vec2 platformsMinCorners[PLATFORMS_COUNT];
 glm::vec2 platformsMaxCorners[PLATFORMS_COUNT];
 
+Cake testCake;
+
 void InitObjects()
 {
 	RandomizePlatforms(platforms, PLATFORMS_COUNT);
@@ -168,9 +268,20 @@ void InitObjects()
 		platformsMinCorners[currPlatform] = platforms[currPlatform].GetMinCorner();
 		platformsMaxCorners[currPlatform] = platforms[currPlatform].GetMaxCorner();
 	}
+	srand((unsigned) time(0));
 
-	player = Player(glm::vec2(0.0f, 0.2f), glm::vec2(0.01f, 0.0f),
-					0.1f, 0.15f);
+	int platformIndex = rand() % PLATFORMS_COUNT;
+
+	float cakePosY = platforms[platformIndex].GetMaxCorner().y;
+	float cakePosX = platforms[platformIndex].GetMaxCorner().x - platforms[platformIndex].GetWidth() / 2.0f;
+
+	testCake = Cake(glm::vec2(cakePosX, cakePosY), 5, 0.1f, 0.1f);
+	testCake.Init();
+
+	glm::vec2 playerPos = platforms[0].GetMaxCorner();
+
+	player = Player(playerPos, glm::vec2(0.01f, 0.0f),
+					0.05f, 0.1f, 5);
 
 	player.Init();
 }
@@ -201,13 +312,91 @@ void Display()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-
-	for(int currPlatform = 0; currPlatform < PLATFORMS_COUNT; currPlatform++)
+	for(int i = 0; i < PLATFORMS_COUNT; i++)
 	{
-		platforms[currPlatform].Render(theProgram);
+		if(platforms[i].IsOutOfWindow())
+		{
+			for(int col = 0; col < GRID_WIDTH; col++)
+			{
+				for(int row = 0; row < GRID_HEIGHT; row++)
+				{
+					if(platformsGrid[col][row].position == platforms[i].GetMinCorner())
+					{
+						platformsGrid[col][row].isTaken = false;
+					}
+				}
+			}
+
+			glm::vec2 platformPos;
+
+			int gridCol = rand() % (GRID_WIDTH);
+			int	gridRow = rand() % (GRID_HEIGHT);
+			platformPos = platformsGrid[gridCol][gridRow].position;
+
+			while(platformsGrid[gridCol][gridRow].isTaken)
+			{
+				gridCol = rand() % (GRID_WIDTH);
+				gridRow = rand() % (GRID_HEIGHT);
+				platformPos = platformsGrid[gridCol][gridRow].position;
+			}
+		
+
+			platformsGrid[gridCol][gridRow].isTaken = true;
+
+			platforms[i] = Platform(platformPos,
+										PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
+										PLATFORMS_LEFT_VELOCITY);
+			platforms[i].Init();
+		}
+
+		platforms[i].Update();
+		platforms[i].Render(theProgram);
+	}
+	/*for(int currPlatform = 0; currPlatform < PLATFORMS_COUNT; currPlatform++)
+	{
+		if(platforms[currPlatform].IsOutOfWindow())
+		{
+			glm::vec2 newPlatformPosition;
+			newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) + 0.5;
+			newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
+		
+			platforms[currPlatform] =
+				Platform(newPlatformPosition,
+						 PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
+						 PLATFORMS_LEFT_VELOCITY);
+
+			for(int i = 0; i < PLATFORMS_COUNT; i++)
+			{
+				if(i != currPlatform)
+				{
+					while(IsCollided(platforms[currPlatform], platforms[i]))
+					{
+						newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) + 0.5;
+						newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
+
+						platforms[currPlatform] =
+							Platform(newPlatformPosition,
+									 PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
+									 PLATFORMS_LEFT_VELOCITY);
+					}
+				}
+			}
+
+			platforms[currPlatform].Init();
+		}*/
+
+	//}
+
+	if(IsCollided(testCake, player))
+	{
+		player.AddFat(testCake.GetFat());
+		testCake.Eat();
 	}
 
-	player.Update(platformsMinCorners, platformsMaxCorners, PLATFORMS_COUNT);
+	testCake.Update(PLATFORMS_LEFT_VELOCITY);
+	testCake.Render(theProgram);
+
+	player.Update(platforms, PLATFORMS_COUNT);
 
 	player.Render(theProgram);
 
@@ -250,10 +439,6 @@ void Keyboard(unsigned char key, int x, int y)
 
 	case 'd':
 		player.MoveRight();
-		break;
-
-	case 32:
-		player.Jump(jumpUnits);
 		break;
 	}
 }
