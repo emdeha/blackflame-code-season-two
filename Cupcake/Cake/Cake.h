@@ -8,6 +8,8 @@
 #include <glload/gll.hpp>
 #include <GL/freeglut.h>
 
+#include "../SmallPhysics/SmallPhysics.h"
+
 
 class Cake
 {
@@ -20,6 +22,8 @@ private:
 	int fatPoints;
 
 	bool isEaten;
+
+	CollisionBody_AABB_2D cakeCollisionBody;
 
 
 	GLuint vertexBufferObject;
@@ -40,6 +44,11 @@ public:
 
 	void Render(GLuint shaderProgram);
 
+
+	CollisionBody_AABB_2D GetCollisionBody()
+	{
+		return cakeCollisionBody;
+	}
 
 	glm::vec2 GetMinCorner()
 	{

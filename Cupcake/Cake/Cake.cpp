@@ -67,7 +67,9 @@ void Cake::Update(float leftVelocity)
 	if(!isEaten)
 	{
 		position.x -= leftVelocity;
-
+		
+		glm::vec2 newCenter = position + glm::vec2(width / 2.0f, height / 2.0f);
+		cakeCollisionBody = CollisionBody_AABB_2D(newCenter, width / 2.0f, height / 2.0f);
 
 		std::vector<float> newPositions(ARRAY_COUNT(vertexData));
 		memcpy(&newPositions[0], vertexData, sizeof(vertexData));

@@ -1,4 +1,4 @@
-﻿Build started 11.11.2012 г. 15:23:40 ч..
+﻿Build started 11.11.2012 г. 19:20:47 ч..
      1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Platform\Platform.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Platform.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -17,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.65
+Time Elapsed 00:00:00.72

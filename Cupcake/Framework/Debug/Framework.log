@@ -1,4 +1,4 @@
-﻿Build started 11.11.2012 г. 18:44:31 ч..
+﻿Build started 11.11.2012 г. 19:23:42 ч..
      1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Framework\Framework.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Framework.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -14,4 +14,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.01
+Time Elapsed 00:00:00.03

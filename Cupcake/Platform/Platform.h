@@ -9,6 +9,7 @@
 #include <GL/freeglut.h>
 
 #include "../Framework/Framework.h"
+#include "../SmallPhysics/SmallPhysics.h"
 
 
 #include <vector>
@@ -27,6 +28,8 @@ private:
 
 	bool isOutOfWindow;
 
+
+	CollisionBody_AABB_2D platformCollisionBody;
 
 
 	GLuint vertexBufferObject;
@@ -47,6 +50,11 @@ public:
 
 	void Render(GLuint shaderProgram);
 
+
+	CollisionBody_AABB_2D GetCollisionBody()
+	{
+		return platformCollisionBody;
+	}
 
 	bool IsOutOfWindow()
 	{

@@ -14,6 +14,8 @@ Player::Player()
 	isJumping = false;
 
 	fatCount = 0;
+
+	playerCollisionBody = CollisionBody_AABB_2D(glm::vec2(), 0.0f, 0.0f);
 }
 Player::Player(glm::vec2 newPosition, glm::vec2 newVelocity,
 			   float newWidth, float newHeight,
@@ -30,6 +32,9 @@ Player::Player(glm::vec2 newPosition, glm::vec2 newVelocity,
 	isJumping = false;
 
 	fatCount = newFatCount;
+
+	glm::vec2 collisionBodyCenter = currentPosition + glm::vec2(width / 2.0f, height / 2.0f);
+	playerCollisionBody = CollisionBody_AABB_2D(collisionBodyCenter, width / 2.0f, height / 2.0f);
 
 
 	vertexData[0] = newPosition.x + newWidth;
@@ -60,23 +65,9 @@ Player::Player(glm::vec2 newPosition, glm::vec2 newVelocity,
 
 void Player::IsCollided(Platform &platform)
 {
-	glm::vec2 playerCenterPoint = 
-		glm::vec2(currentPosition.x + width / 2.0f, currentPosition.y + height / 2.0f);
-	glm::vec2 platformCenterPoint = 
-		glm::vec2(platform.GetMinCorner().x + platform.GetWidth() / 2.0f,
-					platform.GetMinCorner().y + platform.GetHeight() / 2.0f);
-
-	glm::vec2 playerHalfWidths = glm::vec2(width / 2.0f, height / 2.0f);
-	glm::vec2 platformHalfWidths = glm::vec2(platform.GetWidth() / 2.0f, platform.GetHeight() / 2.0f);
-
-		
-	if(fabsf(playerCenterPoint.x - platformCenterPoint.x) > (playerHalfWidths.x + platformHalfWidths.x))
-		return;
-	if(fabsf(playerCenterPoint.y - platformCenterPoint.y) > (playerHalfWidths.y + platformHalfWidths.y))
+	if(!platform.GetCollisionBody().IsCollided(playerCollisionBody))
 		return;
 		
-
-
 	float deltaX = 0.0f;
 	float deltaY = 0.0f;
 
@@ -93,75 +84,6 @@ void Player::IsCollided(Platform &platform)
 	desiredNormal = glm::normalize(glm::vec2(-deltaY, deltaX));
 		
 	velocity = velocity - (glm::dot(velocity, desiredNormal)) * desiredNormal;
-
-
-	/*if((playerMaxCorner.x < platform.GetMaxCorner().x && playerMaxCorner.x > platform.GetMinCorner().x ||
-		playerMinCorner.x < platform.GetMaxCorner().x && playerMinCorner.x > platform.GetMaxCorner().x)
-		&&
-		playerMinCorner.y + 0.1f >= platform.GetMaxCorner().y)
-	{
-		deltaX = platform.GetMaxCorner().x - platform.GetMinCorner().x;
-		deltaY = 0.0f;
-
-		desiredNormal = glm::normalize(glm::vec2(-deltaY, deltaX)); // Normal facing upwards.
-	}
-
-	if((playerMaxCorner.x < platform.GetMaxCorner().x && playerMaxCorner.x > platform.GetMinCorner().x ||
-		playerMinCorner.x < platform.GetMaxCorner().x && playerMinCorner.x > platform.GetMaxCorner().x)
-		&&
-		playerMaxCorner.y - 0.1f <= platform.GetMinCorner().y)
-	{
-		deltaX = platform.GetMinCorner().x - platform.GetMaxCorner().x;
-		deltaY = 0.0f;
-
-		desiredNormal = glm::normalize(glm::vec2(-deltaY, deltaX)); // Normal facing downwards.
-	}*/
-
-	/*
-	glm::vec2 normalOne = glm::vec2(-deltaY, deltaX);
-	glm::vec2 normalTwo = glm::vec2(deltaY, -deltaX);
-
-	normalOne = glm::normalize(normalOne);
-	normalTwo = glm::normalize(normalTwo);
-	*/
-		
-	/*
-	if(platform.GetMinCorner().x > currentPosition.x && platform.GetMaxCorner().y > currentPosition.y - velocity.y)
-	{
-		currentPosition.x -= velocity.x;
-	}
-	if(platform.GetMaxCorner().x < currentPosition.x)
-	{
-		currentPosition.x -= velocity.x;
-	}
-
-	if(platform.GetMaxCorner().y > currentPosition.y)
-	{
-		currentPosition.y -= velocity.y;
-		velocity.y = 0.0f;
-	}
-	if(platform.GetMinCorner().y < currentPosition.y)
-	{
-		currentPosition.y += velocity.y;
-	}
-	*/
-	/*glm::vec2 playerMinCorner = currentPosition;
-	glm::vec2 playerMaxCorner = currentPosition + glm::vec2(width, height);
-
-
-	if(playerMinCorner.x >= minCorner.x && playerMaxCorner.x <= maxCorner.x &&
-		playerMinCorner.y >= minCorner.y && playerMaxCorner.y <= maxCorner.y)
-	{
-		return true;
-	}
-
-	if(playerMinCorner.x > maxCorner.x || playerMaxCorner.x < minCorner.x)
-		return false;
-	if(playerMinCorner.y > maxCorner.y || playerMaxCorner.y < minCorner.y)
-		return false;
-
-
-	return true;*/
 }
 
 void Player::UpdatePhysics(Platform platforms[], int numCorners)
@@ -182,6 +104,9 @@ void Player::UpdatePhysics(Platform platforms[], int numCorners)
 
 void Player::UpdatePositions()
 {
+	glm::vec2 newCenter = currentPosition + glm::vec2(width / 2.0f, height / 2.0f);
+	playerCollisionBody = CollisionBody_AABB_2D(newCenter, width / 2.0f, height / 2.0f);
+
 	std::vector<float> newPositions(ARRAY_COUNT(vertexData));
 	memcpy(&newPositions[0], vertexData, sizeof(vertexData));
 

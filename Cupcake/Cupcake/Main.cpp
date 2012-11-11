@@ -64,54 +64,6 @@ void FillPlatformsGrid()
 	}
 }
 
-bool IsCollided(Platform firstPlatform, Platform secondPlatform)
-{
-	glm::vec2 firstPlatformCenterPoint = 
-		glm::vec2(firstPlatform.GetMinCorner().x + firstPlatform.GetWidth() / 2.0f, 
-				  firstPlatform.GetMinCorner().y + firstPlatform.GetHeight() / 2.0f);
-	glm::vec2 secondPlatformCenterPoint = 
-		glm::vec2(secondPlatform.GetMinCorner().x + secondPlatform.GetWidth() / 2.0f,
-				  secondPlatform.GetMinCorner().y + secondPlatform.GetHeight() / 2.0f);
-
-
-	glm::vec2 firstPlatformHalfWidths = glm::vec2(firstPlatform.GetWidth() / 2.0f, firstPlatform.GetHeight() / 2.0f);
-	glm::vec2 secondPlatformHalfWidths = glm::vec2(secondPlatform.GetWidth() / 2.0f, secondPlatform.GetHeight() / 2.0f);
-
-
-	if(fabsf(firstPlatformCenterPoint.x - secondPlatformCenterPoint.x) >=
-	   (firstPlatformHalfWidths.x + secondPlatformHalfWidths.x))
-		return false;
-	if(fabsf(firstPlatformCenterPoint.y - secondPlatformCenterPoint.y) >=
-	   (firstPlatformHalfWidths.y + secondPlatformHalfWidths.y))
-		return false;
-
-	return true;
-}
-bool IsCollided(Cake cake, Player player)
-{
-	glm::vec2 cakeCenterPoint = 
-		glm::vec2(cake.GetMinCorner().x + cake.GetWidth() / 2.0f, 
-				  cake.GetMinCorner().y + cake.GetHeight() / 2.0f);
-	glm::vec2 playerCenterPoint = 
-		glm::vec2(player.GetMinCorner().x + player.GetWidth() / 2.0f,
-				  player.GetMinCorner().y + player.GetHeight() / 2.0f);
-
-
-	glm::vec2 cakeHalfWidths = glm::vec2(cake.GetWidth() / 2.0f, cake.GetHeight() / 2.0f);
-	glm::vec2 playerHalfWidths = glm::vec2(player.GetWidth() / 2.0f, player.GetHeight() / 2.0f);
-
-
-	if(fabsf(cakeCenterPoint.x - playerCenterPoint.x) >
-		(cakeHalfWidths.x + playerHalfWidths.x))
-		return false;
-	if(fabsf(cakeCenterPoint.y - playerCenterPoint.y) >
-		(cakeHalfWidths.y + playerHalfWidths.y))
-		return false;
-
-
-	return true;
-}
-
 
 void RandomizePlatforms(Platform platformArray[], int platformCount)
 {
@@ -352,42 +304,8 @@ void Display()
 		platforms[i].Update();
 		platforms[i].Render(theProgram);
 	}
-	/*for(int currPlatform = 0; currPlatform < PLATFORMS_COUNT; currPlatform++)
-	{
-		if(platforms[currPlatform].IsOutOfWindow())
-		{
-			glm::vec2 newPlatformPosition;
-			newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) + 0.5;
-			newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
-		
-			platforms[currPlatform] =
-				Platform(newPlatformPosition,
-						 PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
-						 PLATFORMS_LEFT_VELOCITY);
 
-			for(int i = 0; i < PLATFORMS_COUNT; i++)
-			{
-				if(i != currPlatform)
-				{
-					while(IsCollided(platforms[currPlatform], platforms[i]))
-					{
-						newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) + 0.5;
-						newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
-
-						platforms[currPlatform] =
-							Platform(newPlatformPosition,
-									 PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
-									 PLATFORMS_LEFT_VELOCITY);
-					}
-				}
-			}
-
-			platforms[currPlatform].Init();
-		}*/
-
-	//}
-
-	if(IsCollided(testCake, player))
+	if(player.GetCollisionBody().IsCollided(testCake.GetCollisionBody()))
 	{
 		player.AddFat(testCake.GetFat());
 		testCake.Eat();

@@ -28,6 +28,10 @@ Platform::Platform(glm::vec2 newPosition,
 	isOutOfWindow = false;
 
 
+	glm::vec2 collisionBodyCenter = position + glm::vec2(width / 2.0f, height / 2.0f);
+	platformCollisionBody = CollisionBody_AABB_2D(collisionBodyCenter, width / 2.0f, height / 2.0f);
+
+
 	vertexData[0] = newPosition.x + newWidth;
 	vertexData[1] = newPosition.y + newHeight;
 	vertexData[2] = 0.0f; vertexData[3] = 1.0f;
@@ -69,6 +73,9 @@ void Platform::Init()
 void Platform::Update()
 {
 	position.x -= leftMovementVelocity;
+
+	glm::vec2 newCenter = position + glm::vec2(width / 2.0f, height / 2.0f);
+	platformCollisionBody = CollisionBody_AABB_2D(newCenter, width / 2.0f, height / 2.0f);
 
 	glm::vec2 maxCorner = position + glm::vec2(width, height);
 	if(maxCorner.x < -1.0f) isOutOfWindow = true;

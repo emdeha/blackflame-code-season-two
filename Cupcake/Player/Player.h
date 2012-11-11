@@ -11,6 +11,7 @@
 
 #include "../Framework/Framework.h"
 #include "../Platform/Platform.h"
+#include "../SmallPhysics/SmallPhysics.h"
 
 
 #include <vector>
@@ -35,6 +36,8 @@ private:
 
 
 	int fatCount;
+
+	CollisionBody_AABB_2D playerCollisionBody;
 
 
 	GLuint vertexBufferObject;
@@ -69,6 +72,11 @@ public:
 
 	void Jump(float units);
 
+
+	CollisionBody_AABB_2D GetCollisionBody()
+	{
+		return playerCollisionBody;
+	}
 
 	glm::vec2 GetMinCorner()
 	{
