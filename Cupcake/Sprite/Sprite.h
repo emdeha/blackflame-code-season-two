@@ -6,6 +6,9 @@
 #include <glload/gll.hpp>
 
 #include <glm/glm.hpp>
+#include <memory>
+
+#include "Texture2D.h"
 
 
 class Sprite
@@ -20,7 +23,12 @@ private:
 
 
 	GLuint vertexBO;
+	GLuint indexBO;
+	GLuint textureCoordsBO;
 	GLuint vao;
+
+
+	std::shared_ptr<Texture2D> texture;
 
 public:
 	Sprite() {}
@@ -28,6 +36,10 @@ public:
 		   float newWidth, float newHeight);
 
 	void Init();
+
+	void LoadTexture(const std::string &imageFileName);
+
+	void UpdateData(glm::vec2 newPosition);
 
 	void Draw(GLuint shaderProgram);
 };

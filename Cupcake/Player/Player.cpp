@@ -37,29 +37,7 @@ Player::Player(glm::vec2 newPosition, glm::vec2 newVelocity,
 	playerCollisionBody = CollisionBody_AABB_2D(collisionBodyCenter, width / 2.0f, height / 2.0f);
 
 
-	vertexData[0] = newPosition.x + newWidth;
-	vertexData[1] = newPosition.y + newHeight;
-	vertexData[2] = 0.0f; vertexData[3] = 1.0f;
-
-	vertexData[4] = newPosition.x + newWidth;
-	vertexData[5] = newPosition.y;
-	vertexData[6] = 0.0f; vertexData[7] = 1.0f;
-
-	vertexData[8] = newPosition.x;
-	vertexData[9] = newPosition.y + newHeight;
-	vertexData[10] = 0.0f; vertexData[11] = 1.0f;
-
-	vertexData[12] = newPosition.x + newWidth;
-	vertexData[13] = newPosition.y;
-	vertexData[14] = 0.0f; vertexData[15] = 1.0f;
-
-	vertexData[16] = newPosition.x;
-	vertexData[17] = newPosition.y;
-	vertexData[18] = 0.0f; vertexData[19] = 1.0f;
-
-	vertexData[20] = newPosition.x;
-	vertexData[21] = newPosition.y + newHeight;
-	vertexData[22] = 0.0f; vertexData[23] = 1.0f;
+	playerSprite = Sprite(currentPosition, glm::vec4(0.3f, 1.0f, 0.5f, 1.0f), width, height);
 }
 
 
@@ -97,8 +75,7 @@ void Player::UpdatePhysics(Platform platforms[], int numCorners)
 		IsCollided(platforms[i]);/*
 			
 			currentPosition.y -= velocity.y;
-			velocity.y = 0.0f;*/
-			
+			velocity.y = 0.0f;*/			
 	}
 }
 
@@ -107,52 +84,14 @@ void Player::UpdatePositions()
 	glm::vec2 newCenter = currentPosition + glm::vec2(width / 2.0f, height / 2.0f);
 	playerCollisionBody = CollisionBody_AABB_2D(newCenter, width / 2.0f, height / 2.0f);
 
-	std::vector<float> newPositions(ARRAY_COUNT(vertexData));
-	memcpy(&newPositions[0], vertexData, sizeof(vertexData));
-
-
-	newPositions[0] = currentPosition.x + width;
-	newPositions[1] = currentPosition.y + height;
-	newPositions[2] = 0.0f; newPositions[3] = 1.0f;
-
-	newPositions[4] = currentPosition.x + width;
-	newPositions[5] = currentPosition.y;
-	newPositions[6] = 0.0f; newPositions[7] = 1.0f;
-
-	newPositions[8] = currentPosition.x;
-	newPositions[9] = currentPosition.y + height;
-	newPositions[10] = 0.0f; newPositions[11] = 1.0f;
-
-	newPositions[12] = currentPosition.x + width;
-	newPositions[13] = currentPosition.y;
-	newPositions[14] = 0.0f; newPositions[15] = 1.0f;
-
-	newPositions[16] = currentPosition.x;
-	newPositions[17] = currentPosition.y;
-	newPositions[18] = 0.0f; newPositions[19] = 1.0f;
-
-	newPositions[20] = currentPosition.x;
-	newPositions[21] = currentPosition.y + height;
-	newPositions[22] = 0.0f; newPositions[23] = 1.0f;
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertexData), &newPositions[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	playerSprite.UpdateData(currentPosition);
 }
 
 
 void Player::Init()
 {
-	glGenBuffers(1, &vertexBufferObject);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
+	playerSprite.Init();
+	playerSprite.LoadTexture("../data/player.png");
 }
 
 void Player::Update(Platform platforms[], int numCorners)
@@ -174,20 +113,7 @@ void Player::Update(Platform platforms[], int numCorners)
 
 void Player::Render(GLuint shaderProgram)
 {
-	glUseProgram(shaderProgram);
-
-	GLuint colorUnif = glGetUniformLocation(shaderProgram, "color");
-	glUniform4f(colorUnif, 0.0f, 1.0f, 0.0f, 1.0f);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glUseProgram(0);
+	playerSprite.Draw(shaderProgram);
 }
 
 void Player::MoveLeft()

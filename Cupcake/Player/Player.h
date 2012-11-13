@@ -12,6 +12,7 @@
 #include "../Framework/Framework.h"
 #include "../Platform/Platform.h"
 #include "../SmallPhysics/SmallPhysics.h"
+#include "../Sprite/Sprite.h"
 
 
 #include <vector>
@@ -40,10 +41,7 @@ private:
 	CollisionBody_AABB_2D playerCollisionBody;
 
 
-	GLuint vertexBufferObject;
-	GLuint vao;
-
-	float vertexData[24];
+	Sprite playerSprite;
 
 
 	bool isJumping;

@@ -34,12 +34,6 @@ private:
 
 	Sprite platformSprite;
 
-	/*
-	GLuint vertexBufferObject;
-	GLuint vao;
-
-	float vertexData[24];*/
-
 public:
 	Platform();
 

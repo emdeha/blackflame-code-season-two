@@ -1,5 +1,5 @@
-﻿Build started 13.11.2012 г. 20:40:48 ч..
-     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Sprite\Sprite.vcxproj" on node 3 (build target(s)).
+﻿Build started 13.11.2012 г. 22:05:39 ч..
+     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Sprite\Sprite.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Sprite.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
@@ -9,6 +9,7 @@
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Sprite.lib" /NOLOGO Debug\Sprite.obj
          Debug\stdafx.obj
+         Debug\Texture2D.obj
          Sprite.vcxproj -> E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Sprite.lib
        FinalizeBuildStatus:
          Deleting file "Debug\Sprite.unsuccessfulbuild".
@@ -17,4 +18,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.92
+Time Elapsed 00:00:01.03

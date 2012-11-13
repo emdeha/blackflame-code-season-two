@@ -9,6 +9,7 @@
 #include <GL/freeglut.h>
 
 #include "../SmallPhysics/SmallPhysics.h"
+#include "../Sprite/Sprite.h"
 
 
 class Cake
@@ -26,11 +27,8 @@ private:
 
 	CollisionBody_AABB_2D cakeCollisionBody;
 
-
-	GLuint vertexBufferObject;
-	GLuint vao;
-
-	float vertexData[24];
+	
+	Sprite cakeSprite;
 
 public:
 	Cake();
