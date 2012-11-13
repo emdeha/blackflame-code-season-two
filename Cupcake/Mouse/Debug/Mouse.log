@@ -1,4 +1,4 @@
-﻿Build started 10.11.2012 г. 15:13:02 ч..
+﻿Build started 13.11.2012 г. 20:27:43 ч..
      1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Mouse\Mouse.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Mouse.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -15,4 +15,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.19
+Time Elapsed 00:00:00.12

@@ -10,6 +10,7 @@
 
 #include "../Framework/Framework.h"
 #include "../SmallPhysics/SmallPhysics.h"
+#include "../Sprite/Sprite.h"
 
 
 #include <vector>
@@ -31,11 +32,13 @@ private:
 
 	CollisionBody_AABB_2D platformCollisionBody;
 
+	Sprite platformSprite;
 
+	/*
 	GLuint vertexBufferObject;
 	GLuint vao;
 
-	float vertexData[24];
+	float vertexData[24];*/
 
 public:
 	Platform();

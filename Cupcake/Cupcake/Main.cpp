@@ -95,37 +95,6 @@ void RandomizePlatforms(Platform platformArray[], int platformCount)
 									PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
 									PLATFORMS_LEFT_VELOCITY);
 	}
-
-	/*
-	for(int currPlatform = 0; currPlatform < platformCount; currPlatform++)
-	{
-		glm::vec2 newPlatformPosition;
-		newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) - 1;
-		newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
-		
-		platformArray[currPlatform] =
-			Platform(newPlatformPosition,
-					 PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
-					 PLATFORMS_LEFT_VELOCITY);
-
-		for(int i = 0; i < platformCount; i++)
-		{
-			if(i != currPlatform)
-			{
-				while(IsCollided(platforms[currPlatform], platforms[i]))
-				{
-					newPlatformPosition.x = 2 * ((float) rand() / RAND_MAX) - 1;
-					newPlatformPosition.y = 2 * ((float) rand() / RAND_MAX) - 1;
-
-					platformArray[currPlatform] =
-						Platform(newPlatformPosition,
-								 PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
-								 PLATFORMS_LEFT_VELOCITY);
-				}
-			}
-		}
-	}
-	*/
 }
 
 
@@ -208,7 +177,7 @@ void InitializeVertexBuffer()
 glm::vec2 platformsMinCorners[PLATFORMS_COUNT];
 glm::vec2 platformsMaxCorners[PLATFORMS_COUNT];
 
-Cake testCake;
+Cake cakes[5];
 
 void InitObjects()
 {
@@ -222,13 +191,16 @@ void InitObjects()
 	}
 	srand((unsigned) time(0));
 
-	int platformIndex = rand() % PLATFORMS_COUNT;
+	for(int i = 0; i < 5; i++)
+	{
+		int platformIndex = rand() % PLATFORMS_COUNT;
 
-	float cakePosY = platforms[platformIndex].GetMaxCorner().y;
-	float cakePosX = platforms[platformIndex].GetMaxCorner().x - platforms[platformIndex].GetWidth() / 2.0f;
+		float cakePosY = platforms[platformIndex].GetMaxCorner().y;
+		float cakePosX = platforms[platformIndex].GetMaxCorner().x - platforms[platformIndex].GetWidth() / 2.0f;
 
-	testCake = Cake(glm::vec2(cakePosX, cakePosY), 5, 0.1f, 0.1f);
-	testCake.Init();
+		cakes[i] = Cake(glm::vec2(cakePosX, cakePosY), 5, 0.1f, 0.1f);
+		cakes[i].Init();
+	}
 
 	glm::vec2 playerPos = platforms[0].GetMaxCorner();
 
@@ -259,6 +231,8 @@ void Init()
 float _x = 0.0f;
 float _y = 0.0f;
 
+const float EPSILON = 0.0001f;
+
 void Display()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -272,7 +246,10 @@ void Display()
 			{
 				for(int row = 0; row < GRID_HEIGHT; row++)
 				{
-					if(platformsGrid[col][row].position == platforms[i].GetMinCorner())
+					glm::vec2 positionVector = platformsGrid[col][row].position - platforms[i].GetMinCorner();
+					float distance = glm::length(positionVector);
+
+					if(distance <= EPSILON || distance >= -EPSILON)
 					{
 						platformsGrid[col][row].isTaken = false;
 					}
@@ -295,9 +272,10 @@ void Display()
 
 			platformsGrid[gridCol][gridRow].isTaken = true;
 
+			platformPos.x += 2.0f;
 			platforms[i] = Platform(platformPos,
-										PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
-										PLATFORMS_LEFT_VELOCITY);
+									PLATFORMS_WIDTH, PLATFORMS_HEIGHT,
+									PLATFORMS_LEFT_VELOCITY);
 			platforms[i].Init();
 		}
 
@@ -305,14 +283,28 @@ void Display()
 		platforms[i].Render(theProgram);
 	}
 
-	if(player.GetCollisionBody().IsCollided(testCake.GetCollisionBody()))
+	for(int i = 0; i < 5; i++)
 	{
-		player.AddFat(testCake.GetFat());
-		testCake.Eat();
-	}
+		if(cakes[i].IsOutOfWindow() || cakes[i].IsEaten())
+		{
+			int platformIndex = rand() % PLATFORMS_COUNT;
 
-	testCake.Update(PLATFORMS_LEFT_VELOCITY);
-	testCake.Render(theProgram);
+			float cakePosY = platforms[platformIndex].GetMaxCorner().y;
+			float cakePosX = platforms[platformIndex].GetMaxCorner().x - platforms[platformIndex].GetWidth() / 2.0f;
+
+			cakes[i] = Cake(glm::vec2(cakePosX, cakePosY), 5, 0.1f, 0.1f);
+			cakes[i].Init();
+		}
+
+		if(player.GetCollisionBody().IsCollided(cakes[i].GetCollisionBody()))
+		{
+			player.AddFat(cakes[i].GetFat());
+			cakes[i].SetIsEaten(true);
+		}
+
+		cakes[i].Update(PLATFORMS_LEFT_VELOCITY);
+		cakes[i].Render(theProgram);
+	}
 
 	player.Update(platforms, PLATFORMS_COUNT);
 

@@ -11,6 +11,7 @@ Cake::Cake()
 	position = glm::vec2();
 	fatPoints = 0;
 	isEaten = false;
+	isOutOfWindow = false;
 }
 Cake::Cake(glm::vec2 newPosition, float newFatPoints,
 		   float newWidth, float newHeight)
@@ -21,7 +22,7 @@ Cake::Cake(glm::vec2 newPosition, float newFatPoints,
 
 	width = newWidth;
 	height = newHeight;
-
+	isOutOfWindow = false;
 
 	// TODO: Remove hard-coded width and height.
 	vertexData[0] = newPosition.x + newWidth;
@@ -70,6 +71,9 @@ void Cake::Update(float leftVelocity)
 		
 		glm::vec2 newCenter = position + glm::vec2(width / 2.0f, height / 2.0f);
 		cakeCollisionBody = CollisionBody_AABB_2D(newCenter, width / 2.0f, height / 2.0f);
+
+		glm::vec2 maxCorner = position + glm::vec2(width, height);
+		if(maxCorner.x < -1.0f) isOutOfWindow = true;
 
 		std::vector<float> newPositions(ARRAY_COUNT(vertexData));
 		memcpy(&newPositions[0], vertexData, sizeof(vertexData));

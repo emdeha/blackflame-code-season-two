@@ -100,6 +100,9 @@
     <ProjectReference Include="..\SmallPhysics\SmallPhysics.vcxproj">
       <Project>{7bc1a7b3-7008-4e50-b84c-f03f9353413b}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Sprite\Sprite.vcxproj">
+      <Project>{b20a6dde-a49d-4f85-8c4b-ce3901ff96ad}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

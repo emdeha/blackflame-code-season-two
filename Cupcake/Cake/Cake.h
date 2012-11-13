@@ -22,6 +22,7 @@ private:
 	int fatPoints;
 
 	bool isEaten;
+	bool isOutOfWindow;
 
 	CollisionBody_AABB_2D cakeCollisionBody;
 
@@ -44,6 +45,11 @@ public:
 
 	void Render(GLuint shaderProgram);
 
+
+	bool IsOutOfWindow()
+	{
+		return isOutOfWindow;
+	}
 
 	CollisionBody_AABB_2D GetCollisionBody()
 	{
@@ -72,9 +78,14 @@ public:
 	{
 		return fatPoints;
 	}
-	void Eat()
+	void SetIsEaten(bool newIsEaten)
 	{
 		isEaten = true;
+	}
+
+	bool IsEaten()
+	{
+		return isEaten;
 	}
 };
 

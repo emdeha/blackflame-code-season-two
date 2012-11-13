@@ -31,7 +31,8 @@ Platform::Platform(glm::vec2 newPosition,
 	glm::vec2 collisionBodyCenter = position + glm::vec2(width / 2.0f, height / 2.0f);
 	platformCollisionBody = CollisionBody_AABB_2D(collisionBodyCenter, width / 2.0f, height / 2.0f);
 
-
+	platformSprite = Sprite(position, glm::vec4(0.5f, 0.3f, 1.0f, 1.0f), width, height);
+	/*
 	vertexData[0] = newPosition.x + newWidth;
 	vertexData[1] = newPosition.y + newHeight;
 	vertexData[2] = 0.0f; vertexData[3] = 1.0f;
@@ -54,11 +55,13 @@ Platform::Platform(glm::vec2 newPosition,
 
 	vertexData[20] = newPosition.x;
 	vertexData[21] = newPosition.y + newHeight;
-	vertexData[22] = 0.0f; vertexData[23] = 1.0f;
+	vertexData[22] = 0.0f; vertexData[23] = 1.0f;*/
 }
 
 void Platform::Init()
 {
+	platformSprite.Init();
+	/*
 	glGenBuffers(1, &vertexBufferObject);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
@@ -68,6 +71,7 @@ void Platform::Init()
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
+	*/
 }
 
 void Platform::Update()
@@ -80,43 +84,47 @@ void Platform::Update()
 	glm::vec2 maxCorner = position + glm::vec2(width, height);
 	if(maxCorner.x < -1.0f) isOutOfWindow = true;
 
-	std::vector<float> newPositions(ARRAY_COUNT(vertexData));
-	memcpy(&newPositions[0], vertexData, sizeof(vertexData));
+	/*std::vector<float> newPositions;
 
 
-	newPositions[0] = position.x + width;
-	newPositions[1] = position.y + height;
-	newPositions[2] = 0.0f; newPositions[3] = 1.0f;
+	newPositions.push_back(position.x + width);
+	newPositions.push_back(position.y + height);
+	newPositions.push_back(0.0f); newPositions.push_back(1.0f);
 
-	newPositions[4] = position.x + width;
-	newPositions[5] = position.y;
-	newPositions[6] = 0.0f; newPositions[7] = 1.0f;
+	newPositions.push_back(position.x + width);
+	newPositions.push_back(position.y);
+	newPositions.push_back(0.0f); newPositions.push_back(1.0f);
 
-	newPositions[8] = position.x;
-	newPositions[9] = position.y + height;
-	newPositions[10] = 0.0f; newPositions[11] = 1.0f;
+	newPositions.push_back(position.x);
+	newPositions.push_back(position.y + height);
+	newPositions.push_back(0.0f); newPositions.push_back(1.0f);
 
-	newPositions[12] = position.x + width;
-	newPositions[13] = position.y;
-	newPositions[14] = 0.0f; newPositions[15] = 1.0f;
+	newPositions.push_back(position.x + width);
+	newPositions.push_back(position.y);
+	newPositions.push_back(0.0f); newPositions.push_back(1.0f);
 
-	newPositions[16] = position.x;
-	newPositions[17] = position.y;
-	newPositions[18] = 0.0f; newPositions[19] = 1.0f;
+	newPositions.push_back(position.x);
+	newPositions.push_back(position.y);
+	newPositions.push_back(0.0f); newPositions.push_back(1.0f);
 
-	newPositions[20] = position.x;
-	newPositions[21] = position.y + height;
-	newPositions[22] = 0.0f; newPositions[23] = 1.0f;
+	newPositions.push_back(position.x);
+	newPositions.push_back(position.y + height);
+	newPositions.push_back(0.0f); newPositions.push_back(1.0f);*/
 
 
+	platformSprite = Sprite(position, glm::vec4(0.5f, 0.3f, 1.0f, 1.0f), width, height);
+	platformSprite.Init();
+	/*
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertexData), &newPositions[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	*/
 }
 
 void Platform::Render(GLuint shaderProgram)
 {
-	glUseProgram(shaderProgram);
+	platformSprite.Draw(shaderProgram);
+	/*glUseProgram(shaderProgram);
 		
 	GLuint colorUnif = glGetUniformLocation(shaderProgram, "color");
 	glUniform4f(colorUnif, fabsf(position.x), fabsf(position.y), 0.5f, 1.0f);
@@ -131,5 +139,5 @@ void Platform::Render(GLuint shaderProgram)
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glUseProgram(0);
+	glUseProgram(0);*/
 }
