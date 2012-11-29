@@ -13,7 +13,10 @@ Cake::Cake()
 	isEaten = false;
 	isOutOfWindow = false;
 }
-Cake::Cake(glm::vec2 newPosition, float newFatPoints,
+Cake::Cake(glm::vec2 newPosition, 
+		   float newAnimationMaxOffset,
+		   float newAnimationOffset,
+		   float newFatPoints,
 		   float newWidth, float newHeight)
 {
 	position = newPosition;
@@ -24,6 +27,10 @@ Cake::Cake(glm::vec2 newPosition, float newFatPoints,
 	height = newHeight;
 	isOutOfWindow = false;
 
+
+	animationMaxY = newAnimationMaxOffset + position.y;
+	animationMinY = position.y;
+	animationOffset = newAnimationOffset;
 	
 	cakeSprite = Sprite(position, glm::vec4(1.0f, 0.3f, 0.5f, 1.0f), width, height);
 }
@@ -31,7 +38,8 @@ Cake::Cake(glm::vec2 newPosition, float newFatPoints,
 void Cake::Init()
 {
 	cakeSprite.Init();
-	cakeSprite.LoadTexture("../data/cake.png");
+	cakeSprite.AddTexture("../data/cake.png");
+	cakeSprite.ChangeTexture("../data/cake.png");
 }
 
 void Cake::Update(float leftVelocity)
@@ -39,7 +47,18 @@ void Cake::Update(float leftVelocity)
 	if(!isEaten)
 	{
 		position.x -= leftVelocity;
+
+		if(position.y < animationMinY)
+		{
+			animationOffset = animationOffset * (-1.0f);
+		}
+		if(position.y > animationMaxY)
+		{
+			animationOffset = animationOffset * (-1.0f);
+		}
 		
+		position.y += animationOffset;
+				
 		glm::vec2 newCenter = position + glm::vec2(width / 2.0f, height / 2.0f);
 		cakeCollisionBody = CollisionBody_AABB_2D(newCenter, width / 2.0f, height / 2.0f);
 

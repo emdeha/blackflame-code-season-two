@@ -8,6 +8,8 @@
 #include <glm/glm.hpp>
 #include <memory>
 
+#include <map>
+
 #include "Texture2D.h"
 
 
@@ -28,7 +30,8 @@ private:
 	GLuint vao;
 
 
-	std::shared_ptr<Texture2D> texture;
+	std::shared_ptr<Texture2D> currentTexture;
+	std::map<std::string, std::shared_ptr<Texture2D>> texture;
 
 public:
 	Sprite() {}
@@ -37,11 +40,14 @@ public:
 
 	void Init();
 
-	void LoadTexture(const std::string &imageFileName);
+	void AddTexture(const std::string &imageFileName);
+	//void LoadTexture(const std::string &imageFileName);
 
 	void UpdateData(glm::vec2 newPosition);
 
 	void Draw(GLuint shaderProgram);
+
+	void ChangeTexture(const std::string &imageFileName);
 };
 
 

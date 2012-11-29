@@ -22,7 +22,7 @@ Sprite::Sprite(glm::vec2 newPosition, glm::vec4 newColor,
 	vao = 0;
 
 
-	texture = std::shared_ptr<Texture2D>(new Texture2D());
+	texture.clear();
 }
 
 void Sprite::Init()
@@ -85,6 +85,17 @@ void Sprite::Init()
 }
 
 
+void Sprite::AddTexture(const std::string &imageFileName)
+{
+	texture.insert(std::make_pair(imageFileName, std::shared_ptr<Texture2D>(new Texture2D())));
+	if(!texture[imageFileName]->Load(imageFileName))
+	{
+		std::printf("Error loading texture");
+		return;
+	}
+}
+
+/*
 void Sprite::LoadTexture(const std::string &imageFileName)
 {
 	if(!texture->Load(imageFileName))
@@ -93,11 +104,13 @@ void Sprite::LoadTexture(const std::string &imageFileName)
 		return;
 	}
 }
-
+*/
 
 void Sprite::UpdateData(glm::vec2 newPosition)
 {
 	std::vector<float> vertexData;
+
+	position = newPosition;
 
 	vertexData.push_back(newPosition.x);
 	vertexData.push_back(newPosition.y + height);
@@ -117,8 +130,8 @@ void Sprite::UpdateData(glm::vec2 newPosition)
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertexData), &vertexData[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * vertexData.size(), &vertexData[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); 
 }
 
 void Sprite::Draw(GLuint shaderProgram)
@@ -138,15 +151,22 @@ void Sprite::Draw(GLuint shaderProgram)
 	glBindBuffer(GL_ARRAY_BUFFER, textureCoordsBO);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	
+	currentTexture->Bind(GL_TEXTURE0);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBO);
-
-	texture->Bind(GL_TEXTURE0);
-
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 
+	glDisable(GL_BLEND);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glUseProgram(0);
+}
+
+void Sprite::ChangeTexture(const std::string &imageFileName)
+{
+	currentTexture = texture[imageFileName];
 }

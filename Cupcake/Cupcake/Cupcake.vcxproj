@@ -85,6 +85,9 @@
     <ProjectReference Include="..\Cake\Cake.vcxproj">
       <Project>{9cfd160c-7fa4-482f-9b18-34aab16d737a}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\FatMeterArrow\FatMeterArrow.vcxproj">
+      <Project>{af9cbb8f-f68b-497b-8646-75317e16f61a}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Framework\Framework.vcxproj">
       <Project>{0df90e27-088e-4fea-acec-9f9baa75abdb}</Project>
     </ProjectReference>

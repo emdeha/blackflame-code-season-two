@@ -37,7 +37,8 @@ Platform::Platform(glm::vec2 newPosition,
 void Platform::Init()
 {
 	platformSprite.Init();
-	platformSprite.LoadTexture("../data/platform.png");
+	platformSprite.AddTexture("../data/platform.png");
+	platformSprite.ChangeTexture("../data/platform.png");
 }
 
 void Platform::Update()

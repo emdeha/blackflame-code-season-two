@@ -1,17 +1,20 @@
-﻿Build started 13.11.2012 г. 22:05:39 ч..
-     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Framework\Framework.vcxproj" on node 4 (build target(s)).
-     1>InitializeBuildStatus:
+﻿Build started 14.11.2012 г. 18:28:50 ч..
+     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Framework\Framework.vcxproj" on node 5 (rebuild target(s)).
+     1>_PrepareForClean:
+         Deleting file "Debug\Framework.lastbuildstate".
+       InitializeBuildStatus:
          Creating "Debug\Framework.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         All outputs are up-to-date.
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"StdAfx.h" /Fp"Debug\Framework.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
        Lib:
-         All outputs are up-to-date.
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Framework.lib" /NOLOGO Debug\stdafx.obj
          Framework.vcxproj -> E:\CECI\Blackflame\Season Two\Games\Cupcake\Debug\Framework.lib
        FinalizeBuildStatus:
          Deleting file "Debug\Framework.unsuccessfulbuild".
          Touching "Debug\Framework.lastbuildstate".
-     1>Done Building Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Framework\Framework.vcxproj" (build target(s)).
+     1>Done Building Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Framework\Framework.vcxproj" (rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.03
+Time Elapsed 00:00:00.20

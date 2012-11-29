@@ -20,7 +20,11 @@ private:
 	float width;
 	float height;
 
-	int fatPoints;
+	float animationMaxY;
+	float animationMinY;
+	float animationOffset;
+
+	float fatPoints;
 
 	bool isEaten;
 	bool isOutOfWindow;
@@ -33,6 +37,8 @@ private:
 public:
 	Cake();
 	Cake(glm::vec2 newPosition, 
+	     float newAnimationMaxOffset,
+		 float newAnimationOffset,
 		 float newFatPoints,
 		 float newWidth, float newHeight);
 
@@ -72,7 +78,7 @@ public:
 		return height;
 	}
 
-	int GetFat()
+	float GetFat()
 	{
 		return fatPoints;
 	}

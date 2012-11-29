@@ -4,6 +4,7 @@
 #include "../Platform/Platform.h"
 #include "../Player/Player.h"
 #include "../Cake/Cake.h"
+#include "../FatMeterArrow/FatMeterArrow.h"
 
 #include "../Mouse/Mouse.h"
 
@@ -14,23 +15,30 @@
 Mouse userMouse;
 
 
+FatMeterArrow fatMeterArrow;
+Sprite fatMeter;
+Sprite jumpArrow;
+Sprite jumpArrowRight;
+Sprite jumpArrowDiag;
+
+
 GLuint theProgram;
 GLuint offsetUniform;
 GLuint isPlayerUniform;
 
 
-const float JUMP_UNITS = 0.0005f;
+const float JUMP_UNITS = 0.0015f;
 
 const float PLATFORMS_WIDTH = 0.4f;
 const float PLATFORMS_HEIGHT = 0.15f;
-const int PLATFORMS_COUNT = 10;
-const float PLATFORMS_LEFT_VELOCITY = 0.0001f;
+const int PLATFORMS_COUNT = 20;
+const float PLATFORMS_LEFT_VELOCITY = 0.0002f;
 
 Platform platforms[PLATFORMS_COUNT];
 Player player;
 
-const int GRID_WIDTH = (int)(2.0f / 0.4f);
-const int GRID_HEIGHT = (int)(2.0f / 0.15f);
+const int GRID_WIDTH = (int)(2.0f / 0.4f) + 5; // CH: changed this in order to evenly generate the platforms
+const int GRID_HEIGHT = (int)(2.0f / 0.15f) - 1;
 
 struct GridCell
 {
@@ -102,7 +110,7 @@ void HandleMouse()
 {
 	if(userMouse.IsLeftButtonDown())
 	{
-		player.Jump(JUMP_UNITS);
+		player.Jump();
 	}
 }
 void HandleMouseButtons(int button, int state, int x, int y)
@@ -146,33 +154,6 @@ void InitializeShaders(const std::string &vertexShader,
 	theProgram = Framework::CreateProgram(shaderList);
 }
 
-
-const float vertexData[] =
-{
-	+0.5f, +0.5f, 0.0f, 1.0f,
-	+0.5f, -0.5f, 0.0f, 1.0f,
-	-0.5f, +0.5f, 0.0f, 1.0f,
-
-	+0.5f, -0.5f, 0.0f, 1.0f, 
-	-0.5f, -0.5f, 0.0f, 1.0f,
-	-0.5f, +0.5f, 0.0f, 1.0f,
-};
-
-
-GLuint vertexBufferObject;
-GLuint vao;
-
-
-void InitializeVertexBuffer()
-{
-	glGenBuffers(1, &vertexBufferObject);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-
 	
 glm::vec2 platformsMinCorners[PLATFORMS_COUNT];
 glm::vec2 platformsMaxCorners[PLATFORMS_COUNT];
@@ -183,11 +164,20 @@ void InitObjects()
 {
 	RandomizePlatforms(platforms, PLATFORMS_COUNT);
 
+	glm::vec2 playerPosAtPlatform = glm::vec2(2.0f, 2.0f);
+
 	for(int currPlatform = 0; currPlatform < PLATFORMS_COUNT; currPlatform++)
 	{
 		platforms[currPlatform].Init();
 		platformsMinCorners[currPlatform] = platforms[currPlatform].GetMinCorner();
 		platformsMaxCorners[currPlatform] = platforms[currPlatform].GetMaxCorner();
+
+		// CH: Added this to ensure that the player's position is at the first platform
+		if(playerPosAtPlatform.x > platforms[currPlatform].GetMaxCorner().x)
+		{
+			playerPosAtPlatform.x = platforms[currPlatform].GetMaxCorner().x;
+			playerPosAtPlatform.y = platforms[currPlatform].GetMaxCorner().y;
+		}
 	}
 	srand((unsigned) time(0));
 
@@ -198,15 +188,17 @@ void InitObjects()
 		float cakePosY = platforms[platformIndex].GetMaxCorner().y;
 		float cakePosX = platforms[platformIndex].GetMaxCorner().x - platforms[platformIndex].GetWidth() / 2.0f;
 
-		cakes[i] = Cake(glm::vec2(cakePosX, cakePosY), 5, 0.1f, 0.1f);
+		cakes[i] = Cake(glm::vec2(cakePosX, cakePosY), 0.05f, 0.0001f, 0.05f, 0.1f, 0.2f);
 		cakes[i].Init();
 	}
 
-	glm::vec2 playerPos = platforms[0].GetMaxCorner();
+	glm::vec2 playerPos = playerPosAtPlatform;
+	playerPos.x -= 0.1f;
 
 	player = Player(playerPos, glm::vec2(0.01f, 0.0f),
-					0.05f, 0.1f, 5);
-
+					1.0,
+					JUMP_UNITS,
+					0.1f, 0.3f);
 	player.Init();
 }
 
@@ -215,17 +207,38 @@ void Init()
 	InitializeShaders("VertexShader.vert", "FragmentShader.frag");
 
 	InitObjects();
+
+	// CH: the fat meter
+	fatMeter = Sprite(glm::vec2(0.65f, -0.95f), glm::vec4(), 0.3f, 0.1f);
+	fatMeter.Init();
+	fatMeter.AddTexture("../data/fatbar.png");
+	fatMeter.ChangeTexture("../data/fatbar.png");
+
+	fatMeterArrow = FatMeterArrow(glm::vec2(0.65f, -0.95f), "../data/fatbar-arrow.png");
+
 	
-	InitializeVertexBuffer();
+
+	jumpArrow = Sprite(glm::vec2(), glm::vec4(), 0.1f, 0.2f);
+	jumpArrow.Init();
+	jumpArrow.AddTexture("../data/jump-arrow.png");
+	jumpArrow.ChangeTexture("../data/jump-arrow.png");
+
+
+	jumpArrowRight = Sprite(glm::vec2(), glm::vec4(), 0.1f, 0.2f);
+	jumpArrowRight.Init();
+	jumpArrowRight.AddTexture("../data/jump-arrow-r.png");
+	jumpArrowRight.ChangeTexture("../data/jump-arrow-r.png");
+
+
+	jumpArrowDiag = Sprite(glm::vec2(), glm::vec4(), 0.1f, 0.2f);
+	jumpArrowDiag.Init();
+	jumpArrowDiag.AddTexture("../data/jump-arrow-diag.png");
+	jumpArrowDiag.ChangeTexture("../data/jump-arrow-diag.png");
 
 
 	glutMouseFunc(HandleMouseButtons);
 	glutMotionFunc(HandleActiveMovement);
 	glutPassiveMotionFunc(HandlePassiveMovement);
-
-
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
 }
 
 float _x = 0.0f;
@@ -233,11 +246,8 @@ float _y = 0.0f;
 
 const float EPSILON = 0.0001f;
 
-void Display()
+void UpdatePlatforms()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
 	for(int i = 0; i < PLATFORMS_COUNT; i++)
 	{
 		if(platforms[i].IsOutOfWindow())
@@ -282,7 +292,10 @@ void Display()
 		platforms[i].Update();
 		platforms[i].Render(theProgram);
 	}
+}
 
+void UpdateCakes()
+{
 	for(int i = 0; i < 5; i++)
 	{
 		if(cakes[i].IsOutOfWindow() || cakes[i].IsEaten())
@@ -292,10 +305,10 @@ void Display()
 			float cakePosY = platforms[platformIndex].GetMaxCorner().y;
 			float cakePosX = platforms[platformIndex].GetMaxCorner().x - platforms[platformIndex].GetWidth() / 2.0f;
 
-			cakes[i] = Cake(glm::vec2(cakePosX, cakePosY), 5, 0.1f, 0.1f);
+			cakes[i] = Cake(glm::vec2(cakePosX, cakePosY), 0.05f, 0.0001f, 0.05f, 0.1f, 0.2f);
 			cakes[i].Init();
 		}
-
+		
 		if(player.GetCollisionBody().IsCollided(cakes[i].GetCollisionBody()))
 		{
 			player.AddFat(cakes[i].GetFat());
@@ -305,24 +318,76 @@ void Display()
 		cakes[i].Update(PLATFORMS_LEFT_VELOCITY);
 		cakes[i].Render(theProgram);
 	}
+}
+
+float GetMappedToARange(float value,
+						float leftMin, float leftMax,
+						float rightMin, float rightMax)
+{
+	float leftSpan = leftMax - leftMin;
+	float rightSpan = rightMax - rightMin;
+
+	float valueScaled = (value - leftMin) / leftSpan;
+
+	return rightMin + (valueScaled * rightSpan);
+}
+
+void Display()
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+
+	UpdatePlatforms();
+	UpdateCakes();
+
 
 	player.Update(platforms, PLATFORMS_COUNT);
-
 	player.Render(theProgram);
+		
+	if(player.IsDead())
+	{
+		glutLeaveMainLoop();
+	}
 
-	/*
-	glUseProgram(theProgram);
 
-	//glUniform2f(offsetUniform, _x, _y);
+	if(player.GetPosition().y >= 1.0f && player.GetPosition().x >= 1.0f)
+	{
+		jumpArrowDiag.UpdateData(glm::vec2(0.9f, 0.8f));
+		jumpArrowDiag.Draw(theProgram);
+	}
+	else if(player.GetPosition().y >= 1.0f)
+	{
+		if(player.GetPosition().x >= 0.9f)
+		{
+			jumpArrow.UpdateData(glm::vec2(0.9f, 0.8f));
+		}
+		else
+		{
+			jumpArrow.UpdateData(glm::vec2(player.GetPosition().x, 0.8f));
+		}
+		jumpArrow.Draw(theProgram);
+	}
+	else if(player.GetPosition().x >= 1.0f)
+	{
+		if(player.GetPosition().y >= 0.8f)
+		{
+			jumpArrowRight.UpdateData(glm::vec2(0.9f, 0.8f));
+		}
+		else
+		{
+			jumpArrowRight.UpdateData(glm::vec2(0.9f, player.GetPosition().y));
+		}
+		jumpArrowRight.Draw(theProgram);
+	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	float newX = player.GetFat();
+	fatMeterArrow.Update(GetMappedToARange(newX, 0.0f, 2.0f, 0.65f, 0.95f));
+	
 
-	glUseProgram(0);
-	*/
+	fatMeter.Draw(theProgram);
+	fatMeterArrow.Render(theProgram);
 
 	HandleMouse();
 

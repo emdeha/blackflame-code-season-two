@@ -2,6 +2,8 @@
 #define PLAYER_H
 
 
+#include <ctime>
+
 #include <glm/glm.hpp>
 
 #include <glload/gl_3_3.h>
@@ -18,7 +20,7 @@
 #include <vector>
 
 
-static float gravity = 0.0000005f;
+static float gravity = 0.0000009f;
 
 
 class Player
@@ -31,12 +33,18 @@ private:
 
 	glm::vec2 offset;
 
+
+	double starvingTime_secs;
+	clock_t lastTime;
+
 	
 	float width;
 	float height;
 
+	float jumpUnits;
 
-	int fatCount;
+
+	float fatCount;
 
 	CollisionBody_AABB_2D playerCollisionBody;
 
@@ -45,6 +53,7 @@ private:
 
 
 	bool isJumping;
+	bool isDead;
 
 
 	void IsCollided(Platform &platform);
@@ -56,8 +65,9 @@ private:
 public:
 	Player();
 	Player(glm::vec2 newPosition, glm::vec2 newVelocity,
-		   float newWidth, float newHeight,
-		   int newFatCount);
+		   double newStarvingTime_secs,
+		   float newJumpUnits,
+		   float newWidth, float newHeight);
 
 	void Init();
 
@@ -68,7 +78,7 @@ public:
 	void MoveLeft();
 	void MoveRight();
 
-	void Jump(float units);
+	void Jump();
 
 
 	CollisionBody_AABB_2D GetCollisionBody()
@@ -85,6 +95,15 @@ public:
 		return currentPosition + glm::vec2(width, height);
 	}
 
+	glm::vec2 GetVelocity()
+	{
+		return velocity;
+	}
+	glm::vec2 GetPosition()
+	{
+		return currentPosition;
+	}
+
 	float GetWidth()
 	{
 		return width;
@@ -94,9 +113,19 @@ public:
 		return height;
 	}
 
-	void AddFat(int fatToAdd)
+	void AddFat(float fatToAdd)
 	{
 		fatCount += fatToAdd;
+	}
+
+	float GetFat()
+	{
+		return fatCount;
+	}
+
+	bool IsDead()
+	{
+		return isDead;
 	}
 };
 

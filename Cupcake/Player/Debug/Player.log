@@ -1,5 +1,5 @@
-﻿Build started 13.11.2012 г. 22:05:39 ч..
-     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Player\Player.vcxproj" on node 3 (build target(s)).
+﻿Build started 27.11.2012 г. 21:31:25 ч..
+     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Player\Player.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\Player.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
@@ -17,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.59
+Time Elapsed 00:00:00.75
