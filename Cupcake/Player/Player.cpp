@@ -147,14 +147,14 @@ void Player::Update(Platform platforms[], int numCorners)
 
 			if(fatCount <= 0.9f || fatCount >= 1.1f)
 			{
-				velocity.x -= 0.00005f;
-				jumpUnits -= 0.0000005f;
+				velocity.x -= 0.0005f;
+				jumpUnits -= 0.000005f;
 			}
 			else
 			{
 				if(velocity.x <= INITIAL_VELOCITY_X)
 				{
-					velocity.x += 0.00005f;
+					velocity.x += 0.000007f;
 				}
 				if(jumpUnits <= INITIAL_JUMP_UNITS)
 				{ 

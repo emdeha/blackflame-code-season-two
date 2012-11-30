@@ -5,6 +5,7 @@
 #include "../Player/Player.h"
 #include "../Cake/Cake.h"
 #include "../FatMeterArrow/FatMeterArrow.h"
+#include "../Cloud/Cloud.h"
 
 #include "../Mouse/Mouse.h"
 
@@ -27,12 +28,16 @@ GLuint offsetUniform;
 GLuint isPlayerUniform;
 
 
+Cloud clouds[6];
+
+
 const float JUMP_UNITS = 0.0015f;
 
 const float PLATFORMS_WIDTH = 0.4f;
 const float PLATFORMS_HEIGHT = 0.15f;
 const int PLATFORMS_COUNT = 20;
 const float PLATFORMS_LEFT_VELOCITY = 0.0002f;
+const float CLOUD_LEFT_VELOCITY = 0.0001f;
 
 Platform platforms[PLATFORMS_COUNT];
 Player player;
@@ -236,6 +241,13 @@ void Init()
 	jumpArrowDiag.ChangeTexture("../data/jump-arrow-diag.png");
 
 
+	clouds[0] = Cloud(1.1f, 0.0f, "../data/cloud2.png");
+	clouds[1] = Cloud(0.6f, 0.0f, "../data/cloud2.png");
+	clouds[2] = Cloud(-0.6f, 0.5f, "../data/cloud2.png");
+	clouds[3] = Cloud(0.6f, 0.5f, "../data/cloud2.png");
+	clouds[4] = Cloud(-0.3f, -0.5f, "../data/cloud2.png");
+	clouds[5] = Cloud(0.4f, -0.5f, "../data/cloud2.png");
+
 	glutMouseFunc(HandleMouseButtons);
 	glutMotionFunc(HandleActiveMovement);
 	glutPassiveMotionFunc(HandlePassiveMovement);
@@ -332,15 +344,27 @@ float GetMappedToARange(float value,
 	return rightMin + (valueScaled * rightSpan);
 }
 
+
 void Display()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	//glClearColor(0.83f, 0.94f, 0.96f, 1.0f);
+	glClearColor(0.76f, 0.91f, 0.94f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 
+	for(int i = 0; i < 6; i++)
+	{
+		clouds[i].Update(CLOUD_LEFT_VELOCITY);
+		clouds[i].Render(theProgram);
+	}
+
+	/*
+	cloud.Draw(theProgram);
+	*/
+
 	UpdatePlatforms();
 	UpdateCakes();
-
+	
 
 	player.Update(platforms, PLATFORMS_COUNT);
 	player.Render(theProgram);
@@ -383,7 +407,7 @@ void Display()
 
 
 	float newX = player.GetFat();
-	fatMeterArrow.Update(GetMappedToARange(newX, 0.0f, 2.0f, 0.65f, 0.95f));
+	fatMeterArrow.Update(GetMappedToARange(newX, 0.0f, 2.0f, 0.35f, 2.95f));
 	
 
 	fatMeter.Draw(theProgram);

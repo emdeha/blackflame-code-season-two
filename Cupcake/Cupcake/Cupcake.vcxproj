@@ -85,6 +85,9 @@
     <ProjectReference Include="..\Cake\Cake.vcxproj">
       <Project>{9cfd160c-7fa4-482f-9b18-34aab16d737a}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Cloud\Cloud.vcxproj">
+      <Project>{23a492b8-f924-4a2d-b78d-3ffda31769a6}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\FatMeterArrow\FatMeterArrow.vcxproj">
       <Project>{af9cbb8f-f68b-497b-8646-75317e16f61a}</Project>
     </ProjectReference>
