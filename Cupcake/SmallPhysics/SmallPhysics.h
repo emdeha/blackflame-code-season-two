@@ -2,7 +2,7 @@
 #define SMALL_PHYSICS_H
 
 
-#include <glm/glm.hpp>
+#include "../glfiles/gl-headers/glm/glm.hpp"
 
 class CollisionBody_AABB_2D
 {

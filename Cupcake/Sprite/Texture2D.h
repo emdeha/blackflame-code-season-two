@@ -2,12 +2,12 @@
 #define TEXTURE_2D_H
 
 
-#include <glload/gl_3_3.h>
-#include <glload/gll.hpp>
+#include "../glfiles/gl-headers/glload/gl_3_3.h"
+#include "../glfiles/gl-headers/glload/gll.hpp"
 
 #include <string>
 
-#include <FreeImage.h>
+#include "../glfiles/gl-headers/FreeImage.h"
 
 
 class Texture2D

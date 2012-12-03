@@ -8,10 +8,11 @@
 #include <stdexcept>
 #include <string.h>
 
-#include <glload/gl_3_3.h>
-#include <glload/gll.hpp>
-#include <glutil/Shader.h>
-#include <GL/freeglut.h>
+
+#include "../glfiles/gl-headers/glload/gl_3_3.h"
+#include "../glfiles/gl-headers/glload/gll.hpp"
+#include "../glfiles/gl-headers/glutil/Shader.h"
+#include "../glfiles/gl-headers/GL/freeglut.h"
 
 #include "../Framework/Framework.h"
 

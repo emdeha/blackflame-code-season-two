@@ -1,0 +1,39 @@
+﻿Build started 2.12.2012 г. 17:21:15 ч..
+     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Cupcake\Cupcake.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Release\Cupcake.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D _CRT_SECURE_NO_WARNINGS /D _CRT_SECURE_NO_DEPRECATE /D _SCL_SECURE_NO_WARNINGS /D TIXML_USE_STL /D FREEGLUT_STATIC /D WIN32 /D _LIB /D FREEGLUT_LIB_PRAGMAS=0 /D RELEASE /D NDEBUG /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Main.cpp
+         Main.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Cupcake.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"E:\CECI\Blackflame\Season Two\Games\Cupcake\glfiles\gl-libs" FreeImage.lib glload.lib glimg.lib glutil.lib glmesh.lib freeglut.lib glu32.lib opengl32.lib gdi32.lib winmm.lib user32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Release\Cupcake.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Cupcake.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Cupcake.lib" /MACHINE:X86 Release\Main.obj
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Cake.lib"
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Cloud.lib"
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\FatMeterArrow.lib"
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Framework.lib"
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Mouse.lib"
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Platform.lib"
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Player.lib"
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\SmallPhysics.lib"
+         "E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Sprite.lib"
+         Generating code
+     1>e:\ceci\programming\myprograms\opengl\opengl tasks\mckesson\tutorial 0.3.8\glsdk\freeglut\src\freeglut_structure.c(579): warning C4706: assignment within conditional expression
+     1>e:\ceci\programming\myprograms\opengl\opengl tasks\mckesson\tutorial 0.3.8\glsdk\freeglut\src\freeglut_structure.c(590): warning C4706: assignment within conditional expression
+     1>e:\ceci\programming\myprograms\opengl\opengl tasks\mckesson\tutorial 0.3.8\glsdk\freeglut\src\freeglut_init.c(404): warning C4706: assignment within conditional expression
+     1>e:\ceci\programming\myprograms\opengl\opengl tasks\mckesson\tutorial 0.3.8\glsdk\freeglut\src\freeglut_init.c(410): warning C4706: assignment within conditional expression
+     1>e:\ceci\programming\myprograms\opengl\opengl tasks\mckesson\tutorial 0.3.8\glsdk\freeglut\src\freeglut_callbacks.c(103): warning C4706: assignment within conditional expression
+     1>e:\ceci\programming\myprograms\opengl\opengl tasks\mckesson\tutorial 0.3.8\glsdk\freeglut\src\freeglut_callbacks.c(109): warning C4706: assignment within conditional expression
+     1>e:\ceci\programming\myprograms\opengl\opengl tasks\mckesson\tutorial 0.3.8\glsdk\freeglut\src\freeglut_font.c(155): warning C4706: assignment within conditional expression
+     1>e:\ceci\programming\myprograms\opengl\opengl tasks\mckesson\tutorial 0.3.8\glsdk\freeglut\src\freeglut_input_devices.c(169): warning C4706: assignment within conditional expression
+         Finished generating code
+         Cupcake.vcxproj -> E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Cupcake.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Cupcake.exe;#1" /manifest Release\Cupcake.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Release\Cupcake.unsuccessfulbuild".
+         Touching "Release\Cupcake.lastbuildstate".
+     1>Done Building Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Cupcake\Cupcake.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:07.43

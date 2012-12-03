@@ -2,7 +2,6 @@
 #define CLOUD_H
 
 
-#include <glm/glm.hpp>
 #include "../Sprite/Sprite.h"
 
 

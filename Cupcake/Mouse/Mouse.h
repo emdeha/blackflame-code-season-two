@@ -2,7 +2,7 @@
 #define MOUSE_H
 
 
-#include <glm\glm.hpp>
+#include "../glfiles/gl-headers/glm/glm.hpp"
 
 
 class Mouse

@@ -2,7 +2,6 @@
 #define FAT_METER_ARROW_H
 
 
-#include <glm/glm.hpp>
 #include "../Sprite/Sprite.h"
 
 

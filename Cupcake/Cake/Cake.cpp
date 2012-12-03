@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Cake.h"
 
-#include "../Framework/Framework.h"
 
 #include <vector>
 

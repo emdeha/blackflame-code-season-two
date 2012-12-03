@@ -1,0 +1,23 @@
+﻿Build started 2.12.2012 г. 17:19:59 ч..
+     1>Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Player\Player.vcxproj" on node 4 (rebuild target(s)).
+     1>_PrepareForClean:
+         Deleting file "Release\Player.lastbuildstate".
+       InitializeBuildStatus:
+         Creating "Release\Player.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"StdAfx.h" /Fp"Release\Player.pch" /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Release\Player.pch" /Fo"Release\\" /Fd"Release\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt Player.cpp
+         Player.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\Lib.exe /OUT:"E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Player.lib" /NOLOGO /LTCG Release\Player.obj
+         Release\stdafx.obj
+         Player.vcxproj -> E:\CECI\Blackflame\Season Two\Games\Cupcake\Release\Player.lib
+       FinalizeBuildStatus:
+         Deleting file "Release\Player.unsuccessfulbuild".
+         Touching "Release\Player.lastbuildstate".
+     1>Done Building Project "E:\CECI\Blackflame\Season Two\Games\Cupcake\Player\Player.vcxproj" (rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.50

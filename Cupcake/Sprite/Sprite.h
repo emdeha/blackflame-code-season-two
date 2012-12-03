@@ -2,12 +2,12 @@
 #define SPRITE_H
 
 
-#include <glload/gl_3_3.h>
-#include <glload/gll.hpp>
+#include "../glfiles/gl-headers/glload/gl_3_3.h"
+#include "../glfiles/gl-headers/glload/gll.hpp"
 
-#include <glm/glm.hpp>
+#include "../glfiles/gl-headers/glm/glm.hpp"
+
 #include <memory>
-
 #include <map>
 
 #include "Texture2D.h"

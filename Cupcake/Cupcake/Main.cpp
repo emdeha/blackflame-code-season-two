@@ -28,16 +28,28 @@ GLuint offsetUniform;
 GLuint isPlayerUniform;
 
 
+
+const int TICKS_PER_SECOND = 50;
+const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+const int MAX_FRAMESKIP = 10;
+
+
+
 Cloud clouds[6];
 
-
+#ifdef _DEBUG
 const float JUMP_UNITS = 0.0015f;
+const float PLATFORMS_LEFT_VELOCITY = 0.0002f;
+const float CLOUD_LEFT_VELOCITY = 0.0001f;
+#elif defined RELEASE
+const float JUMP_UNITS = 0.0015f;
+const float PLATFORMS_LEFT_VELOCITY = 0.0001f;
+const float CLOUD_LEFT_VELOCITY = 0.00001f;
+#endif
 
 const float PLATFORMS_WIDTH = 0.4f;
 const float PLATFORMS_HEIGHT = 0.15f;
 const int PLATFORMS_COUNT = 20;
-const float PLATFORMS_LEFT_VELOCITY = 0.0002f;
-const float CLOUD_LEFT_VELOCITY = 0.0001f;
 
 Platform platforms[PLATFORMS_COUNT];
 Player player;
@@ -207,8 +219,15 @@ void InitObjects()
 	player.Init();
 }
 
+
+DWORD nextGameTick;
+int loops;
+
 void Init()
 {
+	nextGameTick = GetTickCount();	
+
+
 	InitializeShaders("VertexShader.vert", "FragmentShader.frag");
 
 	InitObjects();
@@ -344,41 +363,27 @@ float GetMappedToARange(float value,
 	return rightMin + (valueScaled * rightSpan);
 }
 
-
-void Display()
+void Update()
 {
-	//glClearColor(0.83f, 0.94f, 0.96f, 1.0f);
-	glClearColor(0.76f, 0.91f, 0.94f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-
 	for(int i = 0; i < 6; i++)
 	{
 		clouds[i].Update(CLOUD_LEFT_VELOCITY);
-		clouds[i].Render(theProgram);
 	}
-
-	/*
-	cloud.Draw(theProgram);
-	*/
 
 	UpdatePlatforms();
 	UpdateCakes();
-	
 
 	player.Update(platforms, PLATFORMS_COUNT);
-	player.Render(theProgram);
-		
+
+	
 	if(player.IsDead())
 	{
 		glutLeaveMainLoop();
 	}
 
-
 	if(player.GetPosition().y >= 1.0f && player.GetPosition().x >= 1.0f)
 	{
 		jumpArrowDiag.UpdateData(glm::vec2(0.9f, 0.8f));
-		jumpArrowDiag.Draw(theProgram);
 	}
 	else if(player.GetPosition().y >= 1.0f)
 	{
@@ -390,7 +395,6 @@ void Display()
 		{
 			jumpArrow.UpdateData(glm::vec2(player.GetPosition().x, 0.8f));
 		}
-		jumpArrow.Draw(theProgram);
 	}
 	else if(player.GetPosition().x >= 1.0f)
 	{
@@ -402,16 +406,61 @@ void Display()
 		{
 			jumpArrowRight.UpdateData(glm::vec2(0.9f, player.GetPosition().y));
 		}
-		jumpArrowRight.Draw(theProgram);
 	}
-
 
 	float newX = player.GetFat();
 	fatMeterArrow.Update(GetMappedToARange(newX, 0.0f, 2.0f, 0.35f, 2.95f));
-	
+}
 
+void Render()
+{
+	for(int i = 0; i < 6; i++)
+	{
+		clouds[i].Update(CLOUD_LEFT_VELOCITY);
+		clouds[i].Render(theProgram);
+	}
+
+	if(player.GetPosition().x >= 1.0f)
+	{
+		jumpArrowRight.Draw(theProgram);
+	}
+	else if(player.GetPosition().y >= 1.0f)
+	{
+		jumpArrow.Draw(theProgram);
+	}
+	else if(player.GetPosition().y >= 1.0f && player.GetPosition().x >= 1.0f)
+	{
+		jumpArrowDiag.Draw(theProgram);
+	}
+
+	UpdatePlatforms();
+	UpdateCakes();	
+
+	player.Update(platforms, PLATFORMS_COUNT);
+	player.Render(theProgram);
+		
 	fatMeter.Draw(theProgram);
 	fatMeterArrow.Render(theProgram);
+}
+
+void Display()
+{
+	//glClearColor(0.83f, 0.94f, 0.96f, 1.0f);
+	glClearColor(0.76f, 0.91f, 0.94f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+
+	loops = 0;
+	while(GetTickCount() > nextGameTick && loops < MAX_FRAMESKIP)
+	{
+		Update();
+
+		nextGameTick += SKIP_TICKS;
+		loops++;
+	}
+	
+	Render();
+
 
 	HandleMouse();
 

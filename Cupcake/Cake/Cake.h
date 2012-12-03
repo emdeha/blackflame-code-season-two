@@ -2,12 +2,6 @@
 #define CAKE_H
 
 
-#include <glm/glm.hpp>
-
-#include <glload/gl_3_3.h>
-#include <glload/gll.hpp>
-#include <GL/freeglut.h>
-
 #include "../SmallPhysics/SmallPhysics.h"
 #include "../Sprite/Sprite.h"
 
